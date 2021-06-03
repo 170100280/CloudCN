@@ -1,5 +1,9 @@
 <?php
 
-$frase = "Frase. teste pasot. 21 maio 2020";
+$frase = "Futebol Desmentido É falso o que o jornal Record escreve hoje sobre Darwin Nuñez.";
 $val = str_replace(substr(strrchr($frase, "."),1),"",$frase);
-echo $val;
+$val1 = strrchr($frase, ".");
+$val2 = substr(strrchr($frase, "."),1);
+
+$val3 = str_replace(substr(strrchr($frase, "["),1),"",$frase);
+echo $val3;
