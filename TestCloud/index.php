@@ -65,14 +65,16 @@ if ($oDomImagens)
     $srIMG="";
     $xpath = new DomXPath($oDomImagens);
     $nodeList = $xpath->query("//div[@class='article-thumb-list col-xs-12 news-three']");
-    //print_r($nodeList);
+    $myNode = $xpath->query("//p[@class='news-title']");
+    print_r($myNode);
+    echo($myNode->item(0)->nodeValue);
     if($nodeList->count() == 0){
         echo "<br> Nada foi escolhido";
     }else
     {    $urlNoticia = $nodeList->item(0)->childNodes->item(1)->childNodes->item(1)->getAttribute("href");
         //$srcImagem= $nodeList->item(0)->childNodes->item(1)->childNodes->item(1)->childNodes->item(1)->childNodes->item(1)->childNodes->item(1)->getAttribute("src");
-        $urlTitulo = $nodeList->item(0)->childNodes->item(1)->childNodes->item(1)->childNodes->item(1);
-        var_dump($urlTitulo);
+        $urlTitulo = $nodeList->item(0)->childNodes->item(1)->childNodes->item(1)->childNodes->item(1)->nextElementSibling->childNodes->item(1)->nextElementSibling->textContent;
+        //var_dump($urlTitulo);
         //echo $lengthNode=$nodeList->item(0)->childNodes->length;
        
         /*for ($i=0; $i+1 <= $lengthNode ; $i++)
