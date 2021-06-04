@@ -60,11 +60,8 @@ $img = array("img1.jpg", "img2.jpg", "img3.jpg","img4.jpg","img5.jpg","img6.jpg"
 
 if ($oDomImagens)
 {
-    
     @$oDomImagens->loadHTML($a);
     $xpath = new DomXPath($oDomImagens);
-   
-    
     //$imgNode = $xpath->query("//div[@class='news-img-wrapper']")->item(1)->childNodes->item(1)->childNodes->item(1)->getAttribute("src"); bloqueado?
     
 ?>
@@ -128,7 +125,14 @@ if ($oDomImagens)
                            
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><button  type="submit" formaction="corpoNoticia.php" class="btn btn-outline-dark mt-auto" myURL="<?php echo $urlNoticia; ?>">Ver mais</button></div>
+                                <div class="text-center">
+
+                                    <form class="d-flex" method="post" action="corpoNoticia.php">
+                                        <input hidden name="urlNoticia"  value="<?php echo $urlNoticia; ?>" type="text"></input>
+                                        <input  type="submit"  class="btn btn-outline-dark mt-auto" value="Ver mais"></input>
+                                    </form>
+
+                                </div>
                             </div>
                         </div>
                     </div>

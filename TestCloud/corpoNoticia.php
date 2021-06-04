@@ -1,6 +1,31 @@
 <?php
-$URL = $_POST['myURL'];
-echo $URL;
+
+use util\HttpHelper;
+
+require "./vendor/autoload.php";
+$URL = $_POST['urlNoticia'];
+
+const MAIN_URL = "https://www.slbenfica.pt/";
+
+$o = new HttpHelper();
+$a = $o->expandGooglUrl(MAIN_URL.$URL);
+
+$oDomImagens = new DOMDocument();
+
+if ($oDomImagens)
+{
+    @$oDomImagens->loadHTML($a);
+    $xpath = new DomXPath($oDomImagens);
+
+    $titleNoticia = $xpath->query("//h1[@class='title']")->item(0)->nodeValue;
+ 
+
+    $noticiaText = $xpath->query("//div[@class='text-block col-xs-12']")->item(0)->nodeValue;
+   // print_r($noticiaText);
+   
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -35,11 +60,9 @@ echo $URL;
                     <div class="col-2"></div>
                     <div class="col-8 text-center">
                         <img src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" class="img-fluid" alt="...">
-                        <h1 class="text-center">Título</h1>
+                        <h1 class="text-center"><?php echo $titleNoticia;?></h1>
                         <p class="lead">
-                            nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-                            nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-                            nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+                            <?php echo $noticiaText; ?>
                         </p>
                         <div class="list-group">
                             <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
