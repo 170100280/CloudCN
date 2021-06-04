@@ -51,45 +51,22 @@ $result = $strInert = $db->dbInsert(
 $o = new HttpHelper();
 
 $a = $o->expandGooglUrl("https://www.slbenfica.pt/agora/newsFeed?m=Futebol");
-$b= $o->extractAsFromHtml($a);
 
-$c = $o->getTitleAndUrl($b);
 //print_r($a);
 
 $oDomImagens = new DOMDocument();
+$img = array("img1.jpg", "img2.jpg", "img3.jpg","img4.jpg","img5.jpg","img6.jpg","img7.jpg","img8.jpg","img9.jpg","img10.jpg"); 
+
 
 if ($oDomImagens)
 {
-    //@ - "silencer"
+    
     @$oDomImagens->loadHTML($a);
-    $srIMG="";
     $xpath = new DomXPath($oDomImagens);
-    $nodeList = $xpath->query("//div[@class='article-thumb-list col-xs-12 news-three']");
-    $myNode = $xpath->query("//p[@class='news-title']");
-    print_r($myNode);
-    echo($myNode->item(0)->nodeValue);
-    if($nodeList->count() == 0){
-        echo "<br> Nada foi escolhido";
-    }else
-    {    $urlNoticia = $nodeList->item(0)->childNodes->item(1)->childNodes->item(1)->getAttribute("href");
-        //$srcImagem= $nodeList->item(0)->childNodes->item(1)->childNodes->item(1)->childNodes->item(1)->childNodes->item(1)->childNodes->item(1)->getAttribute("src");
-        $urlTitulo = $nodeList->item(0)->childNodes->item(1)->childNodes->item(1)->childNodes->item(1)->nextElementSibling->childNodes->item(1)->nextElementSibling->textContent;
-        //var_dump($urlTitulo);
-        //echo $lengthNode=$nodeList->item(0)->childNodes->length;
-       
-        /*for ($i=0; $i+1 <= $lengthNode ; $i++)
-        {
-            if($node->item($i)->childNodes->item(1)!=NULL)
-            {
-                $srcIMG=$node->item($i);
-                
-            }//if
-        }//for*/
-       
-    }
-}
-//print_r($c);//Só por no HTML
-//echo $c[" /pt-pt/agora/noticias/2021/06/01/direto-covid-19-novo-coronavirus-portugal-numeros-do-dia-dgs"];
+   
+    
+    //$imgNode = $xpath->query("//div[@class='news-img-wrapper']")->item(1)->childNodes->item(1)->childNodes->item(1)->getAttribute("src"); bloqueado?
+    
 ?>
 
 
@@ -123,31 +100,39 @@ if ($oDomImagens)
             <div class="container px-4 px-lg-5 mt-5">
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                 <?php 
-                /*array_shift($c);
-                foreach ($c as $value => $val)*/{
-                                 //echo $value."<br>";?>
+                      for ($x = 0; $x <= 17; $x++) {//17 numero de noticias já carregadas no website.
+       
+                        $titleNode = $xpath->query("//p[@class='news-title']")->item($x)->nodeValue;
+                        $urlNoticia = $xpath->query("//div[@class='news col-xs-12']")->item($x)->childNodes->item(1)->getAttribute("href");
+                        
+                ?>
                     <div class="col mb-5">
                         <div class="card h-100">
                             <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <img class="card-img-top" src="img/<?php 
+                            $finImg = mt_rand(0,count($img)-1);
+                            echo $img[$finImg];
+                            ?>" alt="..." />
                             <!-- Product details-->
                             
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
-                                    <h5 class="fw-bolder"><?php  //echo $value; ?></h5>
+                                    <h3 class="fw-bolder"><?php  
+                                    echo($titleNode); 
+                                    ?></h3>
                                     <!-- Product price-->
-                                    Contéudo
+                                    
                                 </div>
                             </div>
                            
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver mais</a></div>
+                                <div class="text-center"><button  type="submit" formaction="corpoNoticia.php" class="btn btn-outline-dark mt-auto" myURL="<?php echo $urlNoticia; ?>">Ver mais</button></div>
                             </div>
                         </div>
                     </div>
-                   <?php } ?>
+                   <?php  }} ?>
                 </div>
             </div>
         </section>

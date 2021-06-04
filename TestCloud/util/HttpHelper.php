@@ -1368,7 +1368,7 @@ class HttpHelper
         return $ret;
     } //extractAsFromHtml 
 
-    public static function getTitleAndUrl($pArrUrls)
+    /*public static function getTitleAndUrl($pArrUrls)
     {
         unset($pArrUrls[HttpHelper::BENFICA_UNSET_URL]);
         $arr = [];
@@ -1386,5 +1386,5 @@ class HttpHelper
             }
         }
         return $arr;
-    }
+    }*/
 }//HttpHelper
