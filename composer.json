@@ -1,0 +1,14 @@
+{
+    "require": {
+        "ext-curl": "^7.3",
+        "ext-mysqli": "^7.3"
+    },
+
+    "autoload":{
+        "my_comment" : "os valores em psr-4 são da forma namespace : caminho",
+
+        "psr-4":{
+            "util\\":"util"
+        }
+    }
+}
