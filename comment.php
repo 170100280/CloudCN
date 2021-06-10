@@ -1,6 +1,6 @@
 <?php
 session_start();
-header("location:login.php");
+header("location:corpoNoticia.php");
 
 use util\dbCloud;
 require "./vendor/autoload.php";
@@ -34,27 +34,18 @@ if (CLOUD) {
 
 //criação de variáveis e obtenção do valor associado no POST
 
-$autor = $_POST["autor"];
-$email = $_POST["email"];
-$pass = $_POST["password"];
+$comment = $_POST["comentario"];
+$idAutor = 1; //depois de fazer o login criar variaveis de sessao com [autor][id]
+$urlNoti = $_POST["urlNoticia"];
 
 
 
-echo $db->dbInstall(
+$db->dbInstall(
     false //unnecesssary, but makes it clear that one can switch off the install procedure
 );
 
 
-$a = $db->insertNewUser($email, $autor, $pass);
-if (!$a){
-    header("location:login.php");
-}
-else
-{
-    $_SESSION["sucesso"] = false;
-    $_SESSION["mensagem"] = "Registo Inválido!";
-    header("location:registar.php");
-    die();
-}
+$a = $db->dbInsertComment($comment,$idAutor,$urlNoti);
+
 
 ?>

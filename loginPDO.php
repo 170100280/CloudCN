@@ -1,6 +1,5 @@
 <?php
 session_start();
-header("location:login.php");
 
 use util\dbCloud;
 require "./vendor/autoload.php";
@@ -34,27 +33,28 @@ if (CLOUD) {
 
 //criação de variáveis e obtenção do valor associado no POST
 
-$autor = $_POST["autor"];
-$email = $_POST["email"];
+$usernameAutor = $_POST["username"];
 $pass = $_POST["password"];
 
 
-
 echo $db->dbInstall(
-    false //unnecesssary, but makes it clear that one can switch off the install procedure
+    false
 );
 
 
-$a = $db->insertNewUser($email, $autor, $pass);
-if (!$a){
-    header("location:login.php");
+$a = $db->dbloginUser($usernameAutor,$pass);
+var_dump("a",$a);
+if ($a){//!=false
+    $_SESSION["usernameAutor"] = $usernameAutor;
+    header("location:index.php");
 }
 else
 {
     $_SESSION["sucesso"] = false;
-    $_SESSION["mensagem"] = "Registo Inválido!";
-    header("location:registar.php");
+    $_SESSION["mensagem"] = "Login Inválido!";
+    header("location:login.php");
     die();
 }
+
 
 ?>

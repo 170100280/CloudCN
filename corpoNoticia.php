@@ -1,9 +1,20 @@
 <?php
+session_start();
+
 
 use util\HttpHelper;
+use util\dbCloud;
 
 require "./vendor/autoload.php";
-$URL = $_POST['urlNoticia'];
+
+if (isset($_POST["urlNoticia"])){
+    $_SESSION["sessionUrlNoti"] = $_POST["urlNoticia"];
+    $_SESSION["sessionIMG"] = $_POST["img"];
+}
+
+$URL = $_SESSION["sessionUrlNoti"];
+$img = $_SESSION["sessionIMG"];
+
 
 const MAIN_URL = "https://www.slbenfica.pt/";
 
@@ -23,6 +34,31 @@ if ($oDomImagens)
     $noticiaText = $xpath->query("//div[@class='text-block col-xs-12']")->item(0)->nodeValue;
    // print_r($noticiaText);
   
+}
+
+define("CLOUD", false);
+if (CLOUD) {
+    $db = new dbCloud(
+        null,
+        "root",
+        //"PASSwzerord",
+        "1234!",
+        //"schema210323",
+        dbCloud::DEFAULT_SCHEMA_NAME, //will be created if it does not exist
+        3306,
+        //"/cloudsql/<project id>:<region>:<sql instance name>
+        "/cloudsql/simplestcsql-210323:europe-west1:am-210406"
+    );
+} else {
+    $db = new dbCloud(
+        "localhost",
+        "root",
+        "1234",
+        //"schema210323",
+        dbCloud::DEFAULT_SCHEMA_NAME, //will be created if it does not exist
+        3306,
+        null
+    );
 }
 
 
@@ -58,47 +94,83 @@ if ($oDomImagens)
             <div class="container">
                 <div class="row">
                     <div class="col-2"></div>
+                    <div class="col-8 text-center"></div>
+                    <div class="col-2">
+                        <a class="btn btn-secondary" href="index.php" role="button">Voltar a Página Principal</a>
+                        <br>
+                        <?php
+                        if(isset($_SESSION["usernameAutor"]))
+                        {
+                            ?>
+                        <form class="d-flex" method="post" action="logout.php">
+                            <button type="submit" class="btn btn-danger">Logout</button>
+                        </form>
+                        <?php
+                        }else{
+                            ?>
+                            <a class="btn btn-secondary" href="login.php" role="button">Login</a>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2"></div>
                     <div class="col-8 text-center">
-                        <img src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" class="img-fluid" alt="...">
+                        <img src="img/<?php echo $img; ?>" class="img-fluid" alt="...">
                         <h1 class="text-center"><?php echo $titleNoticia;?></h1>
                         <p class="lead">
                             <?php echo $noticiaText; ?>
                         </p>
+                        <?php
+                        $db->dbInstall(false);
+
+                        $a = $db->dbSelectAllComments($URL);
+                        if($a===false)
+                        {
+                            ?>
+                            <div class="list-group">
+                                <a href="" class="list-group-item list-group-item-action">
+
+                                    <p class="mb-1">Não existem comentários associados.</p>
+                                </a>
+                            </div>
+                                <?php
+                        }
+                        else
+                        {
+                            foreach($a as $x)
+                            {
+                        ?>
                         <div class="list-group">
-                            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                            <a href="" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">List group item heading</h5>
-                                    <small>3 days ago</small>
+                                    <h5 class="mb-1"><?php echo $x['nome'];?></h5>
+                                    <small class="text-muted"><?= $x['dataComent'];?></small>
                                 </div>
-                                <p class="mb-1">Some placeholder content in a paragraph.</p>
-                                <small>And some small print.</small>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">List group item heading</h5>
-                                    <small class="text-muted">3 days ago</small>
-                                </div>
-                                <p class="mb-1">Some placeholder content in a paragraph.</p>
-                                <small class="text-muted">And some muted small print.</small>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">List group item heading</h5>
-                                    <small class="text-muted">3 days ago</small>
-                                </div>
-                                <p class="mb-1">Some placeholder content in a paragraph.</p>
-                                <small class="text-muted">And some muted small print.</small>
+                                <p class="mb-1"><?php echo $x['comentario'];?></p>
                             </a>
                         </div>
+                        <?php
+                            }
+                        }
+
+                        if(isset($_SESSION["usernameAutor"]))
+                        {
+                        ?>
                         <br>
-                        <form>
+                        <form method="post" action="comment.php">
                             <div class="mb-3">
                                 <label for="exampleInputEmail1" class="form-label">Adicione o seu comentário</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                                <input hidden name="urlNoticia"  value="<?php echo $URL; ?>" type="text"></input>
+                                <input type="text" class="form-control" name="comentario">
                                 <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
+                        <?php
+                        }
+                        ?>
                     </div>
                     <div class="col-2"></div>
                 </div>

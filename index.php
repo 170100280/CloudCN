@@ -45,7 +45,14 @@ if ($oDomImagens)
         <header class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-danger">
-                    <h1 class="display-4 fw-bolder">Bem vindo <?php echo $_SESSION["autor"];?></h1>
+                    <?php
+                    if(isset($_SESSION["usernameAutor"]))
+                    {
+                    ?>
+                    <h1 class="display-4 fw-bolder">Bem vindo <?php echo $_SESSION["usernameAutor"];?></h1>
+                        <?php
+                    }
+                    ?>
                     <h1 class="display-4 fw-bolder">News S.L.Benfica</h1>
                     <p class="lead fw-normal text-white-50 mb-0">Notícias do melhor do mundo</p>
                 </div>
@@ -53,8 +60,30 @@ if ($oDomImagens)
         </header>
         <!-- Section-->
         <section class="py-5">
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-8 text-center"></div>
+                <div class="col-2">
+                    <?php
+                    if(isset($_SESSION["usernameAutor"]))
+                    {
+                    ?>
+                    <form class="d-flex" method="post" action="logout.php">
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                    </form>
+                        <?php
+                    }else{
+                        ?>
+                        <a class="btn btn-secondary" href="login.php" role="button">Login</a>
+                    <?php
+                    }
+                    ?>
+                </div>
+            </div>
             <div class="container px-4 px-lg-5 mt-5">
+
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
                 <?php 
                       for ($x = 0; $x <= 17; $x++) {//17 numero de noticias já carregadas no website.
        
@@ -87,6 +116,7 @@ if ($oDomImagens)
                                 <div class="text-center">
 
                                     <form class="d-flex" method="post" action="corpoNoticia.php">
+                                        <input hidden name="img"  value="<?php echo $img[$finImg]; ?>" type="text"></input>
                                         <input hidden name="urlNoticia"  value="<?php echo $urlNoticia; ?>" type="text"></input>
                                         <input  type="submit"  class="btn btn-outline-dark mt-auto" value="Ver mais"></input>
                                     </form>
