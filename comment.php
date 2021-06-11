@@ -23,7 +23,7 @@ if (CLOUD) {
     $db = new dbCloud(
         "localhost",
         "root",
-        "1234",
+        "password",
         //"schema210323",
         dbCloud::DEFAULT_SCHEMA_NAME, //will be created if it does not exist
         3306,
@@ -35,16 +35,20 @@ if (CLOUD) {
 //criação de variáveis e obtenção do valor associado no POST
 
 $comment = $_POST["comentario"];
-$idAutor = 1; //depois de fazer o login criar variaveis de sessao com [autor][id]
+$username = $_SESSION["usernameAutor"]; //depois de fazer o login criar variaveis de sessao com [autor][id]
 $urlNoti = $_POST["urlNoticia"];
+
 
 
 
 $db->dbInstall(
     false //unnecesssary, but makes it clear that one can switch off the install procedure
 );
+$a = $db->dbSelectidByUsername($username);
 
-
+foreach($a as $x) {
+    $idAutor = $x['idAutor'];
+}
 $a = $db->dbInsertComment($comment,$idAutor,$urlNoti);
 
 
